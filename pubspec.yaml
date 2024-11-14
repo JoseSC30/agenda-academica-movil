@@ -30,6 +30,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  speech_to_text: ^7.0.0 # para convertir audio a texto
+  file_picker: ^5.0.0 
+  #http: ^0.13.4 # para hacer peticiones http
+  http: ^1.2.2
+  flutter_secure_storage: ^5.0.2
+  pdf: ^3.6.0
+  path_provider: ^2.0.11
+  permission_handler: ^10.2.0
+  open_file: ^3.2.1  # Paquete para abrir archivos
+  flutter_dotenv: ^5.0.2 
+  
+  #xml_rpc: ^0.5.1
+  #flutter_riverpod: ^2.0.0  # para manejar el estado de la aplicacion
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -57,6 +70,9 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - .env
+    - assets/images/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
