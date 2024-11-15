@@ -32,7 +32,8 @@ class _AudioTextoIAPageState extends State<AudioTextoIAPage> {
     }
   }
 
-  // Función para realizar la transcripción (con texto estático)
+  /*
+  //SOLO PRUEBAS: Función para realizar la transcripción (con texto estático)
   Future<void> _transcribeAudio() async {
     if (_selectedFile == null) {
       setState(() {
@@ -54,11 +55,10 @@ class _AudioTextoIAPageState extends State<AudioTextoIAPage> {
 
     // Después de la transcripción, hacemos el análisis con ChatGPT
     await _analyzeTranscription(_transcriptionResult);
-  }
+  }*/
 
 
-  /*
-  // Función para enviar el archivo a la API OpenAI Whisper para la transcripción (me quedan 4 consultas) NO ELIMINAR!!!!
+  // Función para enviar el archivo a la API OpenAI Whisper para la transcripción (quedan 4 consultas) NO ELIMINAR!!!!
   Future<void> _transcribeAudio() async {
     if (_selectedFile == null) {
       setState(() {
@@ -125,8 +125,8 @@ class _AudioTextoIAPageState extends State<AudioTextoIAPage> {
         _isLoading = false;
       });
     }
-    await _analyzeTranscription(_transcriptionResult); // Después de la transcripción, hacemos el análisis con ChatGPT
-  }*/
+    await _analyzeTranscription(_transcriptionResult); //Después de la transcripción, llamamos a la funcion de análisis
+  }
 
   // Función para analizar el texto de transcripción con ChatGPT
   Future<void> _analyzeTranscription(String transcription) async {
@@ -139,13 +139,14 @@ class _AudioTextoIAPageState extends State<AudioTextoIAPage> {
     final openAIOrgId = dotenv.env['OPENAI_ORG_ID']!;
     final url = Uri.parse('https://api.openai.com/v1/chat/completions');
 
+
     final prompt = '''
-    A partir de la siguiente transcripción de audio, extrae los puntos importantes como fecha de presentación, formato y título de la tarea.
-    
-    Transcripción:
-    "$transcription"
-    
-    Responde con una lista clara y concisa de los puntos importantes.
+    Analiza la siguiente transcripción de audio y extrae la información importante de forma breve y precisa. 
+    Incluye solo los puntos clave disponibles, como: fecha, formato, título o tema, una descripción breve del 
+    contenido de la actividad, y ejemplos o herramientas recomendadas para realizarla (si se mencionan).
+    Transcripción de audio: "$transcription"
+    Responde con una lista clara y concisa que incluya únicamente los puntos mencionados en el audio. 
+    Si un punto no se menciona, omítelo de la respuesta.
     ''';
 
     try {
