@@ -13,7 +13,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController passwordController = TextEditingController();
   bool _isLoading = false;
   String errorMessage = "";
-  String odooUrl = 'http://13.93.147.122:8069';
+  //String odooUrl ='http://10.0.2.2:8069';  //Emulador
+  String odooUrl = 'http://13.93.147.122:8070'; // Máquina virtual
 
   Future<void> login() async {
     setState(() {
@@ -27,10 +28,12 @@ class _LoginPageState extends State<LoginPage> {
     print("Contraseña ingresada: $password");
 
     final String loginUrl = '$odooUrl/web/session/authenticate';
-
+    
+    ///"db": "school-odoo",      //base de datos en la nube
+    //"db": "odoo_colegio2"      //base de datos local
     final Map<String, dynamic> data = {
       "params": {
-        "db": "odoo_scholl",
+        "db": "school-odoo",
         "login": email,
         "password": password,
       }
@@ -39,7 +42,8 @@ class _LoginPageState extends State<LoginPage> {
     try {
       final response = await http.post(
         Uri.parse(loginUrl),
-        headers: {"Content-Type": "application/json"},
+        headers: {"Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",},
         body: jsonEncode(data),
       );
 
