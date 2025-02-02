@@ -2,6 +2,9 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
+
+    // Agrega el complemento de Google services
+    id 'com.google.gms.google-services'
 }
 
 def localProperties = new Properties()
@@ -45,10 +48,11 @@ android {
         applicationId "com.example.agenda_academica_movil"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 23 //flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        //multiDexEnabled true
     }
 
     buildTypes {
@@ -64,4 +68,14 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+apply plugin: 'com.google.gms.google-services'  // Agrega el complemento de Google Services
+
+dependencies {
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:32.0.0')
+    // Agrega las dependencias de los productos de Firebase que necesitas
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-firestore'
+
+}

@@ -18,38 +18,54 @@ class _ComunicadosPageState extends State<ComunicadosPage> {
   List<dynamic> comunicados = [];
 
   // Función para obtener los comunicados desde la API
+  
   Future<void> fetchComunicados() async {
-    final String url = 'http://13.93.147.122:8069/api/comunicados/general'; 
+  //final String url = 'http://10.0.2.2:8069/api/comunicados/general'; // Emulador
+  final String url = 'http://13.93.147.122:8070/api/comunicados/general'; // Máquina virtual
+  
 
-    try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Cookie': 'session_id=${widget.sessionId}',
-        },
-      );
+  try {
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        'Cookie': 'session_id=${widget.sessionId}',
+      },
+    );
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        setState(() {
-          comunicados = data;
-          _isLoading = false;
-        });
-      } else {
-        setState(() {
-          errorMessage = 'Error al cargar los comunicados';
-          _isLoading = false;
-        });
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+
+       // Filtrar comunicados con descripciones únicas
+      final descriptionsSet = <String>{};
+      final List<dynamic> uniqueComunicados = [];
+
+      for (var comunicado in data) {
+        if (!descriptionsSet.contains(comunicado['descripcion'])) {
+          descriptionsSet.add(comunicado['descripcion']);
+          uniqueComunicados.add(comunicado);
+        }
       }
-    } catch (e) {
+
       setState(() {
-        errorMessage = 'No se pudo conectar al servidor';
+        comunicados = uniqueComunicados;
+        // comunicados = data;
         _isLoading = false;
       });
-      print('Error al obtener los comunicados: $e');
+    } else {
+      setState(() {
+        errorMessage = 'Error al cargar los comunicados';
+        _isLoading = false;
+      });
     }
+  } catch (e) {
+    setState(() {
+      errorMessage = 'No se pudo conectar al servidor';
+      _isLoading = false;
+    });
+    print('Error al obtener los comunicados: $e');
   }
+}
 
   @override
   void initState() {
@@ -102,8 +118,14 @@ class _ComunicadosPageState extends State<ComunicadosPage> {
       ///////////
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final nuevoComunicado = await Navigator.push(context,MaterialPageRoute(builder: (context) => NuevoComunicadoPage(sessionId: widget.sessionId)),);
+          final nuevoComunicado = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NuevoComunicadoPage(sessionId: widget.sessionId),
+            ),
+          );
           if (nuevoComunicado != null) {
+            // Llamas nuevamente a fetchComunicados para actualizar la lista
             fetchComunicados();
           }
         },
